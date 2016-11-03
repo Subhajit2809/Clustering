@@ -1,0 +1,111 @@
+# clearing the memory
+
+rm(list=ls())
+
+# set working directory
+
+setwd("D:/BUSINESS ANALYTICS")
+
+jeans<-read.csv("jeans.csv") # read the csv file
+dim(jeans)
+nrow(jeans)
+ncol(jeans)
+names(jeans)
+str(jeans)
+data.entry(jeans)
+levels(jeans$FASHION)
+jeans$FASHION<- as.factor(jeans$FASHION)
+head(jeans)
+summary(jeans)
+hist(jeans$STRETCH)
+boxplot(jeans$STRETCH, col = c("royalblue"))
+summary(jeans$STRETCH)
+boxplot(jeans, las=2, col = c("royalblue", "green", "yellow", "red", "black"))
+summary(jeans)
+library(Hmisc)
+impute(jeans$STOREID)
+jeans$FASHION
+head(jeans)
+jeans<-jeans[,-6] # removing the total sales column
+jeans$STOREID<-as.factor(jeans$STOREID)
+summary(jeans)
+jeans.scaled<-scale(jeans[,-1]) # scale the data after removing the store-id
+jeans.scaled
+
+
+set.seed(1)
+jeans.kmeans<-kmeans(jeans.scaled,6) # running the cluster
+jeans.kmeans
+jeans.kmeans$cluster
+jeans.kmeans$centers
+jeans.kmeans$tot.withinss/jeans.kmeans$totss
+
+jeans$CLUSTER <- jeans.kmeans$cluster # add the cluster allocation column to the dataset
+
+# subset the dataset into clusters
+
+jeans.clust.1<-subset(jeans, jeans$CLUSTER==1)
+jeans.clust.1
+jeans.clust.2<-subset(jeans, jeans$CLUSTER==2)
+jeans.clust.2
+jeans.clust.3<-subset(jeans, jeans$CLUSTER==3)
+jeans.clust.3
+jeans.clust.4<-subset(jeans, jeans$CLUSTER==4)
+jeans.clust.4
+jeans.clust.5<-subset(jeans, jeans$CLUSTER==5)
+jeans.clust.5
+jeans.clust.6<-subset(jeans, jeans$CLUSTER==6)
+jeans.clust.6
+
+
+par(mfrow=c(1,1)) # enable to see multiple graphs, in this case graph with one row and two columns
+
+# compaing the distribution of FASHION variable in the cluster 1 and the overall data I would like you 
+hist(jeans$FASHION, main="Histogram of Jeans", xlab="Fashion")
+hist(jeans.clust.1$FASHION, main="Histogram of Jeans in Cluster 1", xlab="Fashion")
+
+# Hierarchical Clustering
+
+jeans<-read.csv("jeans.csv") # read the csv file
+
+summary(jeans)
+head(jeans)
+jeans<-jeans[,-6] # removing the total sales column
+jeans$STOREID<-as.factor(jeans$STOREID)
+summary(jeans)
+jeans.scaled<-scale(jeans[,-1]) # scale the data after removing the store-id
+jeans.scaled
+
+
+
+
+jeans.dist<-dist(jeans.scaled)
+jeans.hclust<-hclust(jeans.dist)
+jeans.hclust
+plot(jeans.hclust)
+rect.hclust(jeans.hclust, k=6)
+
+jeans.hclust
+HCluster<-cutree(jeans.hclust,k=6)
+HCluster
+
+jeans.clustered<-cbind(jeans,HCluster)
+
+jeans.clustered
+head(jeans.clustered)
+
+
+#subset data into clusters
+
+jeans.hclust.1<-subset(jeans.clustered, jeans.clustered$HCluster==1)
+jeans.hclust.1
+jeans.hclust.2<-subset(jeans.clustered, jeans.clustered$HCluster==2)
+jeans.hclust.2
+jeans.hclust.3<-subset(jeans.clustered, jeans.clustered$HCluster==3)
+jeans.hclust.3
+jeans.hclust.4<-subset(jeans.clustered, jeans.clustered$HCluster==4)
+jeans.hclust.4
+jeans.hclust.5<-subset(jeans.clustered, jeans.clustered$HCluster==5)
+jeans.hclust.5
+jeans.hclust.6<-subset(jeans.clustered, jeans.clustered$HCluster==6)
+jeans.hclust.6
